@@ -32,7 +32,7 @@ Before installing Scapy, make sure you have the following prerequisites:
 
 ## Running the code
 
-Run `python ProtocolDetector.py -h` to see the help page
+Run ```python ProtocolDetector.py -h``` to see the help page
 
 This code can test for:
 
