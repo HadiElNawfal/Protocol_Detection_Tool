@@ -36,11 +36,7 @@ Run `python ProtocolDetector.py -h` to see the help page
 
 This code can test for:
 
-1. IP or IPSec
-
-2. ARP or S-ARP
-
-3. BGP or S-BGP
+IP or IPSec
 
 All cases and a tutorial are shown in the **Demo** video.
 
