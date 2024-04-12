@@ -3,7 +3,6 @@ import socket
 import ssl
 from requests.packages.urllib3.exceptions import InsecureRequestWarning, SSLError
 from urllib3.exceptions import InsecureRequestWarning
-import threading
 from scapy.all import IP, ESP, AH, sniff, Ether, srp, ARP, conf, get_if_list
 import scapy.all as scapy
 import subprocess
@@ -16,26 +15,21 @@ import netifaces
 import argparse
 import re
 from datetime import datetime, timedelta
-import time
-#import pybgpstream
-#import pytz
-import requests
+import pybgpstream
+import pytz
 
-#----------------------------------------------------------------------------------------------------------------------------------------- Hadi
-# Function to make sure the script runs with super user privileges privileges. 
+#----------------------------------------------------------------------------------------------------------------------------------------- 
 def check_sudo():
     if not 'SUDO_UID' in os.environ.keys():
         print("Please run the script with sudo!")
         exit()
-
-#Function to make sure packets sent from the device use IPsec protocol
+        
 def ipsec():
     def detectProtocol(packet):
         try:
             if IP not in packet:
-                return "Invalid Packet: No IP Header" #checks if packet contains an IP header; if not, it prints "Invalid Packet: No IP Header"
-            ipHeader = packet[IP] #extracts IP header
-            #checking the length of the IP header
+                return "Invalid Packet: No IP Header" 
+            ipHeader = packet[IP] 
             ihl = ipHeader.ihl  #extracts internet header length
             expectedHeaderLength = ihl * 4  #IHL is in 4-byte units
             if len(ipHeader) < expectedHeaderLength:
@@ -54,13 +48,13 @@ def ipsec():
                 return "IP (with UDP)"
             else:
                 return f"IP (with Unknown Protocol {protocol})"
-        except Exception as e: #handling errors gracefully using try except
+        except Exception as e: 
             return f"Error during protocol detection: {str(e)}"
         
     def packetHandler(packet):
         try:
             result = detectProtocol(packet)
-            print(f"Captured Packet: {result}")#printing the results from the return statements
+            print(f"Captured Packet: {result}")
         except Exception as e:
             print(f"Error processing packet: {e}")
 
@@ -100,8 +94,7 @@ def tls(website):
                 print(f"The website {httpsURL} has HSTS enabled.") #prints it has hsts
             elif urlProtocol == 'https':
                 print(f"The website {httpsURL} does not have HSTS enabled and might be vulnerable to SSL stripping.")#else prints website doesn't have hsts
-        
-            #creating a custom SSL context to get SSL/TLS information, this part is from chatgpt-------------------------------------------------------
+
             hostname = url.split('://', 1)[-1].split('/')[0] # Extract the hostname from the URL.
             sslContext = ssl.create_default_context() # Use ssl.create_default_context() to create a default SSL context
             conn = sslContext.wrap_socket(socket.socket(socket.AF_INET), server_hostname=hostname) # Wrap the socket with the SSL context to create a secure socket.
@@ -121,41 +114,11 @@ def tls(website):
                     print("Warning: Some cookies do not have the 'Secure' flag.")#checks for Set-Cookie in the header
         
         except (requests.exceptions.RequestException, SSLError) as e:
-            print(f"Error: {e}")#handles errors
+            print(f"Error: {e}")#handles errofrs
 
     checkSSLTLS(website)#takes website as input
 
-#---------------------------------------------------------------------------------------------------------------------------------------------- Hussein
-
-#Function to dicover the ARP protocol used on the network (if it is ARP or S-ARP)
-def arp_protocol_check():
-    #function to output valid interface names for the user to choose from
-    def get_interfaces():
-        interfaces = get_if_list()
-        print("Available network interfaces:")
-        for i, interface in enumerate(interfaces):
-            print(f"{i + 1}. {interface}")
-    
-        while True:
-            try:
-                index = int(input("Enter the index of the network interface you want to use: "))
-                selected_interface = interfaces[index - 1]
-                return selected_interface
-            except (ValueError, IndexError):
-                print("Invalid input. Please enter a valid index.")
-    def arp_packet_callback(packet):
-        if ARP in packet and packet[ARP].op in [1, 2]:  # ARP request or reply
-            arp_protocol = "ARP"
-            if packet[ARP].hwtype == 1 and packet[ARP].ptype == 0x0806:
-                arp_protocol = "S-ARP"
-            print(f"{arp_protocol} Packet Detected: {packet.summary()}")
-
-    interface = get_interfaces()
-
-    print(f"Using network interface: {interface}")
-    
-    # Sniff for 10 packets
-    sniff(prn=arp_packet_callback, store=0, filter="arp", iface=interface, count=10)
+#---------------------------------------------------------------------------------------------------------------------------------------------- 
 
 #Function to simulate a arp-spoof based man in the middle attack to check if the network is vulnerable
 def arp_mitm(ip_range):
@@ -312,19 +275,10 @@ def arp_mitm(ip_range):
     # Run the packet sniffer on the interface. So we can capture all the packets and save it to a pcap file that can be opened in Wireshark.
     packet_sniffer(gateway_info["iface"])
 
-#------------------------------------------------------------------------------------------------------------------------------------------------- Maha
+#------------------------------------------------------------------------------------------------------------------------------------------------- 
 
 #This code performs a targetted nmap scan which uses the vuln script, to perfrom vulnerability scanning of the services running on the target
-def nmap_scan(ip):
-    #We perform a scan over ports known to be vulnerable, such as 80 for http, 25 for SMTP, 20 and 21 for FTP .....
-    command = ["nmap", "-p 20,21,22,23,25,53,80,137,139,443,445,1433,3389", "-sV", "--script=vuln", ip]
 
-    try:
-        output = subprocess.check_output(command, stderr=subprocess.STDOUT, universal_newlines=True)
-        print(output)
-    except subprocess.CalledProcessError as e:
-        print(f"Error during Nmap scan: {e.output}")
-'''
 def bgp_analysis():
     # at first, we need to get the isp name
     def get_isp_name():
@@ -438,37 +392,29 @@ def bgp_analysis():
             print("----------\n")
             print(bgp_data)
 
-    # from_time = get_time_one_hour_ago()
-    # end_time = get_current_time()
-    # bgp_data = get_bgp_data(["route-views2", "rrc00"], "updates", from_time, end_time, '9051')
-    # print(bgp_data)
-    # data = get_bgp_data(["route-views2", "rrc00"], "updates", "2023-01-01 00:00:00", "2023-01-01 03:00:00", '9051')
-    # print(data)
-'''
+    from_time = get_time_one_hour_ago()
+    end_time = get_current_time()
+    bgp_data = get_bgp_data(["route-views2", "rrc00"], "updates", from_time, end_time, '9051')
+    print(bgp_data)
+    data = get_bgp_data(["route-views2", "rrc00"], "updates", "2023-01-01 00:00:00", "2023-01-01 03:00:00", '9051')
+    print(data)
 #---------------------------------------------------------------------------------------------------------------------------
 def main():
     parser = argparse.ArgumentParser(description="Network Security Script")
     parser.add_argument("--ipsec", action="store_true", help="Detect IPsec usage in network traffic")
     parser.add_argument("--tls", metavar="WEBSITE", help="Check SSL/TLS features of a website (format: example.com)")
-    parser.add_argument("--arp-check", action="store_true", help="Check ARP protocol on a network interface")
     parser.add_argument("--arp-mitm", metavar="IP_RANGE", help="Simulate ARP spoofing MITM attack on the specified IP range")
-    parser.add_argument("--nmap-scan", metavar="TARGET_IP", help="Perform an nmap NSE scan using vuln script on a target IP address")
     parser.add_argument("bgp-analysis",action="store_true", help="Check if AS is using SBGP, as well as display BGP data and validity")
     args = parser.parse_args()
     check_sudo()
     if args.ipsec:
         ipsec()
     elif args.tls:
-        tls(args.tls)  # Pass the website argument here
-    elif args.arp_check:
-        arp_protocol_check()
+        tls(args.tls) 
     elif args.arp_mitm:
         arp_mitm(args.arp_mitm)
-    elif args.nmap_scan:
-        nmap_scan(args.nmap_scan)
-    
-    #elif args.bgp_analysis:
-        #bgp_analysis()
+    elif args.bgp_analysis:
+        bgp_analysis()
     
     else:
         print("No valid option specified. Use --help for usage information.")
