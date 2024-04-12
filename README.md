@@ -1,5 +1,6 @@
 # Protocol_Detection_Tool
 
+A versatile Python network management utility is developed to assess network protocols and evaluate network security using various libraries. It examines BGP functionality within the network infrastructure while also verifying the presence of TLS and IPsec. Moreover, the tool simulates an ARP spoofing attack to assess the network's resilience at the data link layer. It is important to note that this tool is intended solely for educational purposes and should not be employed for any malicious intent.
 
 This README provides instructions on how to run the Detector code.
 
