@@ -31,7 +31,7 @@ Before installing Scapy, make sure you have the following prerequisites:
 
 ### Installation Steps
 
-1. From your terminal, install all libraries using pip by running the following command: `pip install libraryname`. This will download and install the library and its dependencies.
+1. From your terminal, install all libraries using pip by running the following command: `pip install -r requirements.txt`. This will download and install all the requirements.
 
 
 2. Once the installation is complete, you can clone our code using the command:
