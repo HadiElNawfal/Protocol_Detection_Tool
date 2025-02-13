@@ -31,11 +31,13 @@ Before installing Scapy, make sure you have the following prerequisites:
 
 ### Installation Steps
 
-1. From your terminal, install all libraries using pip by running the following command: `pip3 install libraryname`. This will download and install the library and its dependencies.
+1. From your terminal, install all libraries using pip by running the following command: `pip install libraryname`. This will download and install the library and its dependencies.
 
 
-2. Once the installation is complete, you can clone our code using the command: git clone https://github.com/HadiElNawfal/Protocol_Detection_Tool
-
+2. Once the installation is complete, you can clone our code using the command:
+```
+git clone https://github.com/HadiElNawfal/Protocol_Detection_Tool
+```
 ## Running the code
 
 Run `python ProtocolDetector.py -h` to see the help page.
