@@ -17,6 +17,7 @@ This README provides instructions on how to run the Detector code.
     - [TLS](#tls)
     - [ARP Spoof Attack](#arp-spoof-attack)
     - [BGP Analysis](#bgp-analysis)
+  - [Limitations](#limitations) 
 
 
 ## Installation
@@ -77,6 +78,14 @@ This code can test for:
 * Initialize a stream using PyBGPStream
 * Extract specific details of the ISP such as time-stamp, routes, origin and many more
 * Analyze the BGP of the ISP
+
+## Limitations
+1. Basic Detection
+Detects only ESP (protocol 50) and AH (protocol 51) by protocol number. It cannot verify payload encryption or decryption success.
+2. No Logging
+Outputs are printed to the terminal only, and no persistent logs are generated for later analysis or forensic use.
+3. No Modular Design
+The script mixes multiple tools (TLS check, IPsec sniffing, ARP spoofing, BGP analysis) into a monolithic file
 
 All cases and a tutorial are shown in the **Demo** video.
 
