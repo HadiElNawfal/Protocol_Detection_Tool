@@ -80,11 +80,11 @@ This code can test for:
 * Analyze the BGP of the ISP
 
 ## Limitations
-1. Basic Detection
+1. Basic Detection:
 Detects only ESP (protocol 50) and AH (protocol 51) by protocol number. It cannot verify payload encryption or decryption success.
-2. No Logging
+2. No Logging:
 Outputs are printed to the terminal only, and no persistent logs are generated for later analysis or forensic use.
-3. No Modular Design
+3. No Modular Design:
 The script mixes multiple tools (TLS check, IPsec sniffing, ARP spoofing, BGP analysis) into a monolithic file
 
 All cases and a tutorial are shown in the **Demo** video.
